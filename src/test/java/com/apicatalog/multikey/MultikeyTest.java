@@ -20,6 +20,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.TestCase;
+import com.apicatalog.cid.multibase.Multibase;
+import com.apicatalog.cid.multicodec.GenericMulticodecKey;
+import com.apicatalog.cid.multicodec.MulticodecEncoded;
+import com.apicatalog.cid.multikey.MultikeyImpl;
+import com.apicatalog.cid.multikey.Multikey;
 import com.apicatalog.controller.loader.ControllerContextLoader;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.json.JsonLdComparison;
@@ -29,10 +34,7 @@ import com.apicatalog.linkedtree.builder.TreeBuilderError;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdWriter;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
-import com.apicatalog.multibase.Multibase;
 import com.apicatalog.multicodec.codec.KeyCodec;
-import com.apicatalog.multicodec.key.GenericMulticodecKey;
-import com.apicatalog.multicodec.key.MulticodecKey;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
@@ -56,7 +58,7 @@ class MultikeyTest {
                                 "https://w3id.org/security/multikey/v1"));
             
 
-    static Multikey MULTIKEY_1 = GenericMultikey.of(
+    static Multikey MULTIKEY_1 = MultikeyImpl.of(
             URI.create("https://controller.example/123456789abcdefghi#keys-1"),
             URI.create("https://controller.example/123456789abcdefghi"),
             new GenericMulticodecKey(
@@ -64,7 +66,7 @@ class MultikeyTest {
                     Multibase.BASE_58_BTC,
                     KeyCodec.ED25519_PUBLIC_KEY.decode(Multibase.BASE_58_BTC.decode("z6MkmM42vxfqZQsv4ehtTjFFxQ4sQKS2w6WR7emozFAn5cxu"))));
 
-    static Multikey MULTIKEY_3 = GenericMultikey.of(
+    static Multikey MULTIKEY_3 = MultikeyImpl.of(
             URI.create("https://controller.example/123#keys-2"),
             URI.create("https://controller.example/123"),
             new GenericMulticodecKey(
@@ -72,7 +74,7 @@ class MultikeyTest {
                     Multibase.BASE_58_BTC,
                     KeyCodec.P256_PUBLIC_KEY.decode(Multibase.BASE_58_BTC.decode("zDnaerx9CtbPJ1q36T5Ln5wYt3MQYeGRG5ehnPAmxcf5mDZpv"))));
 
-    static Multikey MULTIKEY_4 = GenericMultikey.of(
+    static Multikey MULTIKEY_4 = MultikeyImpl.of(
             URI.create("https://controller.example/#keys-4"),
             URI.create("https://controller.example/4"),
             new GenericMulticodecKey(
@@ -108,7 +110,7 @@ class MultikeyTest {
             assertEquals(expected.publicKey().type(), multikey.publicKey().type());
             assertArrayEquals(expected.publicKey().rawBytes(), multikey.publicKey().rawBytes());
         }
-        assertTrue(MulticodecKey.equals(expected.publicKey(), multikey.publicKey()));
+        assertTrue(MulticodecEncoded.equals(expected.publicKey(), multikey.publicKey()));
 
         if (expected.privateKey() != null) {
             assertEquals(expected.privateKey().codec(), multikey.privateKey().codec());
@@ -116,7 +118,7 @@ class MultikeyTest {
             assertArrayEquals(expected.privateKey().rawBytes(), multikey.privateKey().rawBytes());
         }
 
-        assertTrue(MulticodecKey.equals(expected.privateKey(), multikey.privateKey()));
+        assertTrue(MulticodecEncoded.equals(expected.privateKey(), multikey.privateKey()));
 
         assertTrue(Multikey.equals(expected, multikey));
     }
@@ -126,7 +128,7 @@ class MultikeyTest {
     @MethodSource({ "resources" })
     void compact(String name, Multikey input) throws IOException, URISyntaxException {
 
-        var compacted = WRITER.compacted(input);
+        var compacted = WRITER.compact(input);
         assertNotNull(compacted);
 
         var expected = TestCase.resource("multikey/" + name).getJsonContent().orElseThrow();
@@ -144,7 +146,7 @@ class MultikeyTest {
 
         var multikey = READER.read(Multikey.class, doc);
 
-        var compacted = WRITER.compacted(multikey);
+        var compacted = WRITER.compact(multikey);
         assertEquals(Multikey.TYPE, multikey.type());
 
         if (!JsonLdComparison.equals(compacted, doc)) {

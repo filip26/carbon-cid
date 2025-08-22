@@ -1,4 +1,4 @@
-package com.apicatalog.multicodec.key;
+package com.apicatalog.cid.multicodec;
 
 import com.apicatalog.linkedtree.LinkedLiteral;
 import com.apicatalog.multibase.Multibase;

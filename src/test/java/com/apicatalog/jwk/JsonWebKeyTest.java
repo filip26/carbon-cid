@@ -19,6 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.TestCase;
+import com.apicatalog.cid.jwk.ImmutableJsonWebKey;
+import com.apicatalog.cid.jwk.JsonWebKey;
 import com.apicatalog.controller.loader.ControllerContextLoader;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.JsonDocument;
@@ -51,7 +53,7 @@ class JsonWebKeyTest {
     static JsonLdWriter WRITER = new JsonLdWriter()
             .scan(JsonWebKey.class);
 
-    static JsonWebKey JWK_1 = GenericJsonWebKey.of(
+    static JsonWebKey JWK_1 = ImmutableJsonWebKey.of(
             URI.create("https://controller.example/#key-1"),
             URI.create("https://controller.example/1"),
             parse(
@@ -61,7 +63,7 @@ class JsonWebKeyTest {
             .expires(Instant.parse("2025-12-06T15:41:46Z"))
             .revoked(Instant.parse("2024-10-06T15:41:46Z"));
 
-    static JsonWebKey JWK_2 = GenericJsonWebKey.of(
+    static JsonWebKey JWK_2 = ImmutableJsonWebKey.of(
             URI.create("https://jsonwebkey.example/issuer/123#key-0"),
             URI.create("https://jsonwebkey.example/issuer/123"),
             parse("{\n"
@@ -98,7 +100,7 @@ class JsonWebKeyTest {
     @MethodSource({ "resources" })
     void compact(String name, JsonWebKey input) throws IOException, URISyntaxException {
 
-        var compacted = WRITER.compacted(input);
+        var compacted = WRITER.compact(input);
         assertNotNull(compacted);
 
         JsonObject expected = resource(name).getJsonContent().map(JsonStructure::asJsonObject).orElseThrow();
@@ -121,7 +123,7 @@ class JsonWebKeyTest {
 
         var jwk = READER.read(JsonWebKey.class, expected);
 
-        var compacted = WRITER.compacted(jwk);
+        var compacted = WRITER.compact(jwk);
         assertEquals(JsonWebKey.TYPE, jwk.type());
 
         if (!expected.containsKey(JsonLdKeyword.CONTEXT)) {

@@ -1,14 +1,14 @@
-package com.apicatalog.multicodec.key;
+package com.apicatalog.cid.multicodec;
 
+import com.apicatalog.cid.multibase.Multibase;
+import com.apicatalog.cid.multibase.MultibaseLiteral;
 import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.orm.mapper.ObjectMapper;
-import com.apicatalog.multibase.Multibase;
-import com.apicatalog.multibase.MultibaseLiteral;
 import com.apicatalog.multicodec.Multicodec.Tag;
 import com.apicatalog.multicodec.MulticodecDecoder;
 import com.apicatalog.uvarint.UVarInt;
 
-public class MulticodecKeyMapper implements ObjectMapper<MultibaseLiteral, MulticodecKey> {
+public class MulticodecKeyMapper implements ObjectMapper<MultibaseLiteral, MulticodecEncoded> {
 
     public static final MulticodecDecoder CODECS = MulticodecDecoder.getInstance(Tag.Key);
 
@@ -23,14 +23,14 @@ public class MulticodecKeyMapper implements ObjectMapper<MultibaseLiteral, Multi
     }
 
     @Override
-    public MulticodecKey object(MultibaseLiteral literal) throws NodeAdapterError {
+    public MulticodecEncoded object(MultibaseLiteral literal) throws NodeAdapterError {
 
         // TODO check bases
 
         return getKey(literal.base(), literal.byteArrayValue());
     }
 
-    protected final MulticodecKey getKey(final Multibase base, final byte[] encodedKey) throws NodeAdapterError {
+    protected final MulticodecEncoded getKey(final Multibase base, final byte[] encodedKey) throws NodeAdapterError {
 
         if (encodedKey == null || encodedKey.length == 0) {
             return null;
@@ -42,7 +42,7 @@ public class MulticodecKeyMapper implements ObjectMapper<MultibaseLiteral, Multi
     }
 
     @Override
-    public MultibaseLiteral literal(MulticodecKey value) {
+    public MultibaseLiteral literal(MulticodecEncoded value) {
 
         if (value == null || value.rawBytes() == null || value.rawBytes().length == 0) {
             return null;

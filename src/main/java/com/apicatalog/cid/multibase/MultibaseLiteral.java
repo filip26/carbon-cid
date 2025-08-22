@@ -1,4 +1,4 @@
-package com.apicatalog.multibase;
+package com.apicatalog.cid.multibase;
 
 import java.util.Objects;
 

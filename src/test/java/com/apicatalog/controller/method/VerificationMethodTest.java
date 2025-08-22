@@ -13,15 +13,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.TestCase;
+import com.apicatalog.cid.VerificationMethod;
+import com.apicatalog.cid.jwk.JsonWebKey;
+import com.apicatalog.cid.multikey.Multikey;
 import com.apicatalog.controller.loader.ControllerContextLoader;
 import com.apicatalog.jsonld.JsonLdError;
-import com.apicatalog.jwk.JsonWebKey;
 import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.builder.TreeBuilderError;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdWriter;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
-import com.apicatalog.multikey.Multikey;
 
 import jakarta.json.JsonObject;
 

@@ -22,22 +22,22 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.apicatalog.TestCase;
-import com.apicatalog.controller.Service;
-import com.apicatalog.controller.ServiceEndpoint;
+import com.apicatalog.cid.Service;
+import com.apicatalog.cid.ServiceEndpoint;
+import com.apicatalog.cid.VerificationMethod;
+import com.apicatalog.cid.jwk.JsonWebKey;
+import com.apicatalog.cid.multibase.Multibase;
+import com.apicatalog.cid.multikey.Multikey;
 import com.apicatalog.controller.loader.ControllerContextLoader;
-import com.apicatalog.controller.method.VerificationMethod;
 import com.apicatalog.jsonld.JsonLdError;
 import com.apicatalog.jsonld.document.JsonDocument;
 import com.apicatalog.jsonld.json.JsonLdComparison;
-import com.apicatalog.jwk.JsonWebKey;
 import com.apicatalog.linkedtree.adapter.NodeAdapterError;
 import com.apicatalog.linkedtree.builder.TreeBuilderError;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdReader;
 import com.apicatalog.linkedtree.jsonld.io.JsonLdWriter;
 import com.apicatalog.linkedtree.orm.mapper.TreeReaderMapping;
-import com.apicatalog.multibase.Multibase;
 import com.apicatalog.multicodec.codec.KeyCodec;
-import com.apicatalog.multikey.Multikey;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -212,7 +212,7 @@ class DidDocumentTest {
 
         var doc = READER.read(DidDocument.class, expected);
 
-        var compacted = WRITER.compacted(doc);
+        var compacted = WRITER.compact(doc);
 
         if (!JsonLdComparison.equals(compacted, expected)) {
             assertTrue(TestCase.compareJson(name, null, compacted, expected));
