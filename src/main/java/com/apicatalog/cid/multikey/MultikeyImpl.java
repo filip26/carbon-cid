@@ -3,7 +3,7 @@ package com.apicatalog.cid.multikey;
 import java.net.URI;
 import java.time.Instant;
 
-import com.apicatalog.cid.multicodec.MulticodecEncoded;
+import com.apicatalog.cid.datatype.MulticodecEncoded;
 
 class MultikeyImpl implements Multikey {
 
