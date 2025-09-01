@@ -4,7 +4,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 
-import com.apicatalog.cid.VerificationMethod;
+import com.apicatalog.cid.document.VerificationMethod;
 
 public interface JsonWebKey extends VerificationMethod {
 

@@ -1,4 +1,4 @@
-package com.apicatalog.cid;
+package com.apicatalog.cid.document;
 
 import java.net.URI;
 

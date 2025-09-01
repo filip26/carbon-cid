@@ -3,8 +3,8 @@ package com.apicatalog.cid.multikey;
 import java.net.URI;
 import java.time.Instant;
 
-import com.apicatalog.cid.VerificationMethod;
 import com.apicatalog.cid.datatype.MulticodecEncoded;
+import com.apicatalog.cid.document.VerificationMethod;
 
 public interface Multikey extends VerificationMethod {
 
