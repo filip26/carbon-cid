@@ -10,13 +10,44 @@ import java.time.Instant;
  */
 public interface VerificationMethod {
 
+    /**
+     * The unique identifier of this verification method.
+     *
+     * @return URI identifier
+     */
     URI id();
 
+    /**
+     * The type of this verification method.
+     *
+     * @return verification method type
+     */
     String type();
 
+    /**
+     * The controlling URI of this verification method.
+     *
+     * @return controller URI
+     */
     URI controller();
 
-    Instant revoked();
+    default Instant revoked() {
+        return null;
+    }
 
-    Instant expires();
+    default Instant expires() {
+        return null;
+    }
+    
+    /**
+     * Checks whether this verification method has the required properties:
+     * {@code id}, {@code type}, and {@code controller}.
+     *
+     * @return {@code true} if valid
+     */
+    default boolean hasRequiredProperties() {
+        return id() != null && type() != null && controller() != null;
+    }
+
+    
 }

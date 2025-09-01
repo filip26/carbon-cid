@@ -1,15 +1,13 @@
-package com.apicatalog.controller.method;
+package com.apicatalog.cid;
 
 import java.net.URI;
 import java.time.Instant;
 
-import com.apicatalog.cid.VerificationMethod;
+final class ImmutableVerificationMethod implements VerificationMethod {
 
-public class GenericMethodUri implements VerificationMethod {
-
-    protected final URI id;
+    final URI id;
     
-    public GenericMethodUri(URI id) {
+    ImmutableVerificationMethod(URI id) {
         this.id = id;
     }
     

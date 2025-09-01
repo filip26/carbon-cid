@@ -4,26 +4,30 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 
-class ImmutableJsonWebKey implements JsonWebKey {
+final class ImmutableJsonWebKey implements JsonWebKey {
 
-    protected final URI id;
-    protected final URI controller;
+    final URI id;
+    final URI controller;
 
-    protected final Map<String, Object> publicKey;
-    protected final Map<String, Object> secretKey;
+    final Map<String, Object> publicKey;
+    final Map<String, Object> secretKey;
 
-    protected Instant revoked;
-    protected Instant expires;
+    final Instant revoked;
+    final Instant expires;
 
-    protected ImmutableJsonWebKey(
+    ImmutableJsonWebKey(
             URI id,
             URI controller,
             Map<String, Object> publicKey,
-            Map<String, Object> secretKey) {
+            Map<String, Object> secretKey,
+            Instant revoked,
+            Instant expires) {
         this.id = id;
         this.controller = controller;
         this.publicKey = publicKey;
         this.secretKey = secretKey;
+        this.revoked = revoked;
+        this.expires = expires;
     }
 
     @Override
@@ -54,15 +58,5 @@ class ImmutableJsonWebKey implements JsonWebKey {
     @Override
     public Map<String, Object> secretKey() {
         return secretKey;
-    }
-
-    public ImmutableJsonWebKey expires(Instant expires) {
-        this.expires = expires;
-        return this;
-    }
-
-    public ImmutableJsonWebKey revoked(Instant revoked) {
-        this.revoked = revoked;
-        return this;
     }
 }

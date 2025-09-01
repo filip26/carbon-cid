@@ -1,4 +1,4 @@
-package com.apicatalog.controller.method;
+package com.apicatalog.cid;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.apicatalog.cid.ControllerDocument;
-import com.apicatalog.cid.VerificationMethod;
 import com.apicatalog.controller.resolver.ControllerResolver;
 
 /**
