@@ -1,4 +1,4 @@
-package com.apicatalog.controller.method;
+package com.apicatalog.cid;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,34 +8,33 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.apicatalog.cid.ControllerDocument;
-import com.apicatalog.cid.VerificationMethod;
-import com.apicatalog.controller.resolver.ControllerResolver;
+import com.apicatalog.cid.document.IdentifierDocument;
+import com.apicatalog.cid.document.VerificationMethod;
 
 /**
- * Retrieves a verification method from {@link ControllerDocument}.
+ * Retrieves a verification method from {@link IdentifierDocument}.
  */
-public class VerificationMethodProvider {
+public class VerificationMethodResolver {
 
-    protected final static Map<URI, Function<ControllerDocument, Set<VerificationMethod>>> RELS;
+    protected final static Map<URI, Function<IdentifierDocument, Set<VerificationMethod>>> RELS;
 
     static {
         RELS = new HashMap<>();
         RELS.put(URI.create("https://w3id.org/security#authentication"),
-                ControllerDocument::authentication);
+                IdentifierDocument::authentication);
         RELS.put(URI.create("https://w3id.org/security#assertionMethod"),
-                ControllerDocument::assertion);
+                IdentifierDocument::assertion);
         RELS.put(URI.create("https://w3id.org/security#keyAgreementMethod"),
-                ControllerDocument::keyAgreement);
+                IdentifierDocument::keyAgreement);
         RELS.put(URI.create("https://w3id.org/security#capabilityInvocationMethod"),
-                ControllerDocument::capabilityInvocation);
+                IdentifierDocument::capabilityInvocation);
         RELS.put(URI.create("https://w3id.org/security#capabilityDelegationMethod"),
-                ControllerDocument::capabilityDelegation);
+                IdentifierDocument::capabilityDelegation);
     }
 
-    protected final Collection<ControllerResolver> resolvers;
+    protected final Collection<IdentifierDocumentResolver> resolvers;
 
-    public VerificationMethodProvider(Collection<ControllerResolver> resolvers) {
+    public VerificationMethodResolver(Collection<IdentifierDocumentResolver> resolvers) {
         this.resolvers = resolvers;
     }
 
@@ -46,7 +45,7 @@ public class VerificationMethodProvider {
             final URI documentUri = new URI(methodId.getScheme(), methodId.getSchemeSpecificPart(), null);
 
             // resolve controller document
-            final ControllerDocument document = resolvers.stream()
+            final IdentifierDocument document = resolvers.stream()
                     .filter(r -> r.isAccepted(documentUri))
                     .findFirst()
                     .map(r -> r.resolve(documentUri))
@@ -56,7 +55,7 @@ public class VerificationMethodProvider {
                 throw new IllegalArgumentException("INVALID_CONTROLLER_DOCUMENT_ID");
             }
 
-            final Function<ControllerDocument, Set<VerificationMethod>> methodProvider = RELS.get(relation);
+            final Function<IdentifierDocument, Set<VerificationMethod>> methodProvider = RELS.get(relation);
 
             if (methodProvider == null) {
                 throw new IllegalArgumentException("INVALID_RELATIONSHIP_FOR_VERIFICATION_METHOD");

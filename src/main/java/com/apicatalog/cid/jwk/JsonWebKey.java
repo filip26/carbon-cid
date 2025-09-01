@@ -1,9 +1,10 @@
 package com.apicatalog.cid.jwk;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Map;
 
-import com.apicatalog.cid.VerificationMethod;
+import com.apicatalog.cid.document.VerificationMethod;
 
 public interface JsonWebKey extends VerificationMethod {
 
@@ -20,11 +21,19 @@ public interface JsonWebKey extends VerificationMethod {
         return null;
     }
     
-    static ImmutableJsonWebKey immutable(URI id, URI controller, Map<String, Object> publicKey) {
-        return immutable(id, controller, publicKey, null);
+    static ImmutableJsonWebKey of(URI id, URI controller, Map<String, Object> publicKey) {
+        return new ImmutableJsonWebKey(id, controller, publicKey, null, null, null);
     }
 
-    static ImmutableJsonWebKey immutable(URI id, URI controller, Map<String, Object> publicKey, Map<String, Object> secretKey) {
-        return new ImmutableJsonWebKey(id, controller, publicKey, secretKey);
+    static ImmutableJsonWebKey of(URI id, URI controller, Map<String, Object> publicKey, Instant revoked, Instant expires) {
+        return new ImmutableJsonWebKey(id, controller, publicKey, null, revoked, expires);
+    }
+
+    static ImmutableJsonWebKey of(URI id, URI controller, Map<String, Object> publicKey, Map<String, Object> secretKey) {
+        return new ImmutableJsonWebKey(id, controller, publicKey, secretKey, null, null);
+    }
+    
+    static ImmutableJsonWebKey of(URI id, URI controller, Map<String, Object> publicKey, Map<String, Object> secretKey, Instant revoked, Instant expires) {
+        return new ImmutableJsonWebKey(id, controller, publicKey, secretKey, revoked, expires);
     }
 }

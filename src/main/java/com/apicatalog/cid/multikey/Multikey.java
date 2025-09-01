@@ -1,9 +1,10 @@
 package com.apicatalog.cid.multikey;
 
 import java.net.URI;
+import java.time.Instant;
 
-import com.apicatalog.cid.VerificationMethod;
 import com.apicatalog.cid.datatype.MulticodecEncoded;
+import com.apicatalog.cid.document.VerificationMethod;
 
 public interface Multikey extends VerificationMethod {
 
@@ -20,12 +21,20 @@ public interface Multikey extends VerificationMethod {
         return null;
     }
     
-    static MultikeyImpl of(URI id, URI controller, MulticodecEncoded publicKey) {
-        return of(id, controller, publicKey, null);
+    static Multikey of(URI id, URI controller, MulticodecEncoded publicKey) {
+        return new ImmutableMultikey(id, controller, publicKey, null, null, null);
     }
 
-    static MultikeyImpl of(URI id, URI controller, MulticodecEncoded publicKey, MulticodecEncoded secretKey) {
-        return new MultikeyImpl(id, controller, publicKey, secretKey);
+    static Multikey of(URI id, URI controller, MulticodecEncoded publicKey, Instant revoked, Instant expires) {
+        return new ImmutableMultikey(id, controller, publicKey, null, revoked, expires);
+    }
+
+    static Multikey of(URI id, URI controller, MulticodecEncoded publicKey, MulticodecEncoded secretKey) {
+        return new ImmutableMultikey(id, controller, publicKey, secretKey, null, null);
+    }
+
+    static Multikey of(URI id, URI controller, MulticodecEncoded publicKey, MulticodecEncoded secretKey, Instant revoked, Instant expires) {
+        return new ImmutableMultikey(id, controller, publicKey, secretKey, revoked, expires);
     }
 
 }

@@ -5,26 +5,30 @@ import java.time.Instant;
 
 import com.apicatalog.cid.datatype.MulticodecEncoded;
 
-class MultikeyImpl implements Multikey {
+final class ImmutableMultikey implements Multikey {
 
-    protected final URI id;
-    protected final URI controller;
+    final URI id;
+    final URI controller;
 
-    protected final MulticodecEncoded publicKey;
-    protected final MulticodecEncoded secretKey;
+    final MulticodecEncoded publicKey;
+    final MulticodecEncoded secretKey;
 
-    protected Instant revoked;
-    protected Instant expires;
+    final Instant revoked;
+    final Instant expires;
 
-    protected MultikeyImpl(
+    ImmutableMultikey(
             URI id,
             URI controller,
             MulticodecEncoded publicKey,
-            MulticodecEncoded privateKey) {
+            MulticodecEncoded privateKey,
+            Instant revoked,
+            Instant expires) {
         this.id = id;
         this.controller = controller;
         this.publicKey = publicKey;
         this.secretKey = privateKey;
+        this.revoked = revoked;
+        this.expires = expires;
     }
 
     @Override
@@ -52,11 +56,6 @@ class MultikeyImpl implements Multikey {
         return secretKey;
     }
 
-    public MultikeyImpl revoked(Instant revoked) {
-        this.revoked = revoked;
-        return this;
-    }
-
     @Override
     public Instant revoked() {
         return revoked;
@@ -65,10 +64,5 @@ class MultikeyImpl implements Multikey {
     @Override
     public Instant expires() {
         return expires;
-    }
-
-    public MultikeyImpl expires(Instant expires) {
-        this.expires = expires;
-        return this;
     }
 }
