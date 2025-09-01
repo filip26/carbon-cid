@@ -2,7 +2,7 @@ package com.apicatalog.controller.resolver;
 
 import java.net.URI;
 
-import com.apicatalog.controller.ControllerDocument;
+import com.apicatalog.cid.ControllerDocument;
 
 public interface ControllerResolver {
 

@@ -3,6 +3,8 @@ package com.apicatalog.controller.method;
 import java.net.URI;
 import java.time.Instant;
 
+import com.apicatalog.cid.VerificationMethod;
+
 public class GenericMethodUri implements VerificationMethod {
 
     protected final URI id;
