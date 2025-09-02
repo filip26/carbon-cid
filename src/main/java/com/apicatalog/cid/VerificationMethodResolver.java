@@ -27,6 +27,12 @@ import com.apicatalog.cid.document.VerificationMethod;
  * <li><code>https://w3id.org/security#capabilityInvocationMethod</code></li>
  * <li><code>https://w3id.org/security#capabilityDelegationMethod</code></li>
  * </ul>
+ *
+ * <p>
+ * Resolution checks both existence and consistency: a method must be present in
+ * the specified relation and its {@code controller} must match the document
+ * {@code id}.
+ * </p>
  */
 public class VerificationMethodResolver {
 
@@ -54,7 +60,7 @@ public class VerificationMethodResolver {
      * {@link IdentifierDocumentResolver}s when a controller document must be
      * fetched.
      *
-     * @param resolvers non-empty collection of resolvers
+     * @param resolvers a non-empty collection of document resolvers
      * @throws NullPointerException     if {@code resolvers} is {@code null}
      * @throws IllegalArgumentException if {@code resolvers} is empty
      */
@@ -66,7 +72,24 @@ public class VerificationMethodResolver {
         this.resolvers = resolvers;
     }
 
-    public VerificationMethod resolve(final URI methodId, final Set<VerificationMethod> methods, final IdentifierDocument document) throws VerificationMethodException {
+    /**
+     * Resolves a verification method with the given {@code methodId} from a set of
+     * methods already retrieved from a document, ensuring the controller matches.
+     *
+     * @param methodId the identifier of the verification method
+     * @param methods  the candidate verification methods
+     * @param document the parent document that declares the methods
+     * @return the matching {@link VerificationMethod}
+     *
+     * @throws VerificationMethodException with code
+     *                                     {@link VerificationMethodException.Code#INVALID_VERIFICATION_METHOD}
+     *                                     if no matching method is found or the
+     *                                     controller mismatches
+     * @throws NullPointerException        if any argument is {@code null}
+     */
+    public VerificationMethod resolve(final URI methodId,
+            final Set<VerificationMethod> methods,
+            final IdentifierDocument document) throws VerificationMethodException {
         final VerificationMethod method = methods.stream()
                 .filter(m -> methodId.equals(m.id()))
                 .findFirst()
@@ -77,7 +100,8 @@ public class VerificationMethodResolver {
         if (!document.id().equals(method.controller())) {
             throw new VerificationMethodException(
                     VerificationMethodException.Code.INVALID_VERIFICATION_METHOD,
-                    "Verification method controller mismatch, expected " + document.id() + " but got " + method.controller());
+                    "Verification method controller mismatch, expected " + document.id()
+                            + " but got " + method.controller());
         }
 
         return method;
@@ -100,7 +124,9 @@ public class VerificationMethodResolver {
      *                                     </ul>
      * @throws NullPointerException        if any argument is {@code null}
      */
-    public VerificationMethod resolve(final URI methodId, final URI relation, final IdentifierDocument document) throws VerificationMethodException {
+    public VerificationMethod resolve(final URI methodId,
+            final URI relation,
+            final IdentifierDocument document) throws VerificationMethodException {
 
         Objects.requireNonNull(methodId, "methodId must not be null");
         Objects.requireNonNull(relation, "relation must not be null");
@@ -133,7 +159,7 @@ public class VerificationMethodResolver {
      * document URI.
      *
      * <p>
-     * The document URI is derived from {@code methodId} by removing its fragment.
+     * The document URI is derived from {@code methodId} by stripping its fragment.
      * If no resolver accepts the URI, or the resolved document’s {@code id} does
      * not equal the derived URI, resolution fails.
      * </p>
@@ -152,7 +178,8 @@ public class VerificationMethodResolver {
      *                                     </ul>
      * @throws NullPointerException        if any argument is {@code null}
      */
-    public VerificationMethod resolve(final URI methodId, final URI relation) throws VerificationMethodException {
+    public VerificationMethod resolve(final URI methodId,
+            final URI relation) throws VerificationMethodException {
 
         Objects.requireNonNull(methodId, "methodId must not be null");
         Objects.requireNonNull(relation, "relation must not be null");
@@ -180,7 +207,8 @@ public class VerificationMethodResolver {
         if (!documentUri.equals(document.id())) {
             throw new VerificationMethodException(
                     VerificationMethodException.Code.INVALID_CONTROLLER_DOCUMENT_ID,
-                    "Controller document id mismatch, expected " + documentUri + " but got " + document.id());
+                    "Controller document id mismatch, expected " + documentUri
+                            + " but got " + document.id());
         }
 
         return resolve(methodId, relation, document);
